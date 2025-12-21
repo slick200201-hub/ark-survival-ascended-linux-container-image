@@ -450,6 +450,7 @@ This is a list of all official map names with their map id. The map id is used a
 | Extinction | Extinction_WP |
 | Ragnarok | Ragnarok_WP |
 | Valguero | Valguero_WP |
+| Lost Colony | LostColony_WP |
 
 **NOTE:** Mod Maps have their own id! ([click](#adding-mod-maps))
 

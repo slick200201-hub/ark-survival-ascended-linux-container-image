@@ -5,6 +5,7 @@ This repository provides a step by step guide for Linux administrators to host A
 ## Table of Contents
 
 * [Hardware Requirements](#hardware-requirements)
+* [Management Scripts (NEW)](#management-scripts)
 * [Installation](#installation)
   * [Install Docker & Docker Compose](#1-install-docker--docker-compose)
   * [Start docker daemon](#2-start-docker-daemon)
@@ -50,6 +51,55 @@ I cannot tell you what CPU to use, as I didn't do any testing on this, but this 
 * 4x RAM 16384 MB DDR4 ECC
 
 The server runs next to other services and it runs pretty well.
+
+## Management Scripts
+
+This repository now includes comprehensive Linux shell scripts that replace Windows .bat file functionality for server management. These scripts provide:
+
+* **Automated Setup** - Interactive installation wizard
+* **Server Management** - Start, stop, restart, update, and monitor servers
+* **Watchdog Service** - Automatic restart on crashes
+* **Scheduled Restarts** - Graceful restarts with player notifications
+* **Backup Management** - Create, restore, and manage backups
+
+### Quick Start with Scripts
+
+```bash
+# Download the management scripts
+git clone https://github.com/mschnitzer/ark-survival-ascended-linux-container-image.git
+cd ark-survival-ascended-linux-container-image
+
+# Run automated setup (installs Docker, downloads configs, starts server)
+sudo ./scripts/asa-setup.sh
+
+# Or use individual management commands
+./scripts/asa-server-manager.sh start
+./scripts/asa-server-manager.sh status
+./scripts/asa-backup.sh create asa-server-1
+```
+
+For detailed documentation on all available scripts and their features, see [scripts/README.md](scripts/README.md).
+
+### Script Features
+
+| Script | Purpose | Key Features |
+|--------|---------|--------------|
+| `asa-setup.sh` | Initial setup | Docker installation, server configuration, automated setup |
+| `asa-server-manager.sh` | Server control | Start/stop/restart, status, updates, logs, RCON |
+| `asa-watchdog.sh` | Monitoring | Auto-restart on crash, health checks, restart loop prevention |
+| `asa-scheduled-restart.sh` | Maintenance | Graceful restarts with countdown notifications |
+| `asa-backup.sh` | Backups | Create/restore/list/cleanup backups |
+
+### Windows .bat to Linux Script Equivalents
+
+| Windows .bat Command | Linux Script Equivalent |
+|---------------------|------------------------|
+| `taskkill /F /IM ArkServer.exe` | `docker stop asa-server-1` |
+| `timeout /T 60` | `sleep 60` |
+| Server restart loop | `./scripts/asa-watchdog.sh` |
+| Scheduled restarts | `./scripts/asa-scheduled-restart.sh` |
+| Backup creation | `./scripts/asa-backup.sh create` |
+| RCON commands | `docker exec asa-server-1 asa-ctrl rcon --exec 'command'` |
 
 ## Installation
 

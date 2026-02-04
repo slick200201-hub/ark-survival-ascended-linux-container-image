@@ -2,7 +2,7 @@
 Description=ARK: Survival Ascended Watchdog for %i
 After=docker.service
 Requires=docker.service
-Documentation=https://github.com/mschnitzer/ark-survival-ascended-linux-container-image
+Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image
 
 [Service]
 Type=simple

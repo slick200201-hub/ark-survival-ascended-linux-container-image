@@ -6,7 +6,7 @@ This guide helps you quickly get started with the new Linux management scripts.
 
 ### 1. Clone or Download Repository
 ```bash
-git clone https://github.com/mschnitzer/ark-survival-ascended-linux-container-image.git
+git clone https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image.git
 cd ark-survival-ascended-linux-container-image
 ```
 

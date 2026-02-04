@@ -217,7 +217,7 @@ create_server_directory() {
 download_docker_compose() {
     print_header "Downloading Docker Compose Configuration"
     
-    local compose_url="https://raw.githubusercontent.com/mschnitzer/ark-survival-ascended-linux-container-image/main/docker-compose.yml"
+    local compose_url="https://raw.githubusercontent.com/slick200201-hub/ark-survival-ascended-linux-container-image/main/docker-compose.yml"
     
     print_info "Downloading docker-compose.yml..."
     if curl -fsSL "$compose_url" -o docker-compose.yml; then
@@ -361,7 +361,7 @@ show_final_info() {
     print_info "  GameUserSettings.ini: /var/lib/docker/volumes/asa-server_server-files-1/_data/ShooterGame/Saved/Config/WindowsServer/"
     echo ""
     print_info "Documentation:"
-    print_info "  https://github.com/mschnitzer/ark-survival-ascended-linux-container-image"
+    print_info "  https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image"
     echo ""
 }
 

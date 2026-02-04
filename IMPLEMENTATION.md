@@ -232,7 +232,7 @@ examples/
 
 ### Method 1: Quick Setup (Recommended for New Installations)
 ```bash
-git clone https://github.com/mschnitzer/ark-survival-ascended-linux-container-image.git
+git clone https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image.git
 cd ark-survival-ascended-linux-container-image
 sudo ./scripts/asa-setup.sh
 ```

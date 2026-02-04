@@ -1,0 +1,67 @@
+# ARK: Survival Ascended - Advanced Cron Schedule
+# More complex scheduling examples
+
+# === Backup Schedule ===
+
+# Hourly incremental backups during peak hours (12:00 PM - 10:00 PM)
+0 12-22 * * * /usr/local/bin/asa-backup create asa-server-1 hourly
+
+# Daily full backup at 3:00 AM
+0 3 * * * /usr/local/bin/asa-backup create asa-server-1 daily
+
+# Weekly backup on Sunday at 2:00 AM
+0 2 * * 0 /usr/local/bin/asa-backup create asa-server-1 weekly
+
+# Monthly backup on the 1st at 1:00 AM
+0 1 1 * * /usr/local/bin/asa-backup create asa-server-1 monthly
+
+# Clean up old backups - keep 30 backups
+0 4 * * 0 /usr/local/bin/asa-backup cleanup asa-server-1 30
+
+
+# === Restart Schedule ===
+
+# Daily restart at 4:00 AM with 30-minute warning
+30 3 * * * /usr/local/bin/asa-scheduled-restart asa-server-1 30
+
+# Additional restart at 4:00 PM on weekdays with 15-minute warning
+45 15 * * 1-5 /usr/local/bin/asa-scheduled-restart asa-server-1 15
+
+
+# === Maintenance Commands via RCON ===
+
+# Save world every hour
+0 * * * * docker exec asa-server-1 asa-ctrl rcon --exec 'saveworld'
+
+# Announce server information every 6 hours
+0 */6 * * * docker exec asa-server-1 asa-ctrl rcon --exec 'serverchat Welcome to our ARK server! Join our Discord at discord.gg/yourserver'
+
+# Clear wild dinos weekly (Sunday at 5:00 AM, after daily restart)
+0 5 * * 0 docker exec asa-server-1 asa-ctrl rcon --exec 'destroywilddinos'
+
+
+# === Resource Monitoring (optional - requires custom scripts) ===
+
+# Check disk space every hour and alert if low
+#0 * * * * /usr/local/bin/check-disk-space.sh >> /var/log/asa-disk-monitor.log 2>&1
+
+# Log server statistics every 30 minutes
+#*/30 * * * * docker stats asa-server-1 --no-stream >> /var/log/asa-stats.log
+
+
+# === Multiple Server Example ===
+# If you run multiple servers, duplicate and adjust the lines:
+
+# Server 2 - Daily restart at 5:00 AM with 30-minute warning
+#30 4 * * * /usr/local/bin/asa-scheduled-restart asa-server-2 30
+
+# Server 2 - Backup at 2:30 AM
+#30 2 * * * /usr/local/bin/asa-backup create asa-server-2 daily
+
+
+# === Notes ===
+# - Adjust times based on your timezone and player activity
+# - Test schedules before deploying to production
+# - Monitor logs to ensure jobs run successfully
+# - Consider player peak times when scheduling restarts
+# - Always backup before major updates or changes

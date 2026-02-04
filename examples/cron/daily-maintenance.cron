@@ -1,0 +1,16 @@
+# ARK: Survival Ascended Server - Automated Maintenance
+# Add these lines to your crontab with: crontab -e
+
+# Daily backup at 2:00 AM
+0 2 * * * /usr/local/bin/asa-backup create asa-server-1 daily
+
+# Weekly backup cleanup - keep 14 most recent backups
+0 3 * * 0 /usr/local/bin/asa-backup cleanup asa-server-1 14
+
+# Daily server restart at 4:00 AM with 30-minute warning
+# Warning starts at 3:30 AM
+30 3 * * * /usr/local/bin/asa-scheduled-restart asa-server-1 30
+
+# Alternative: Restart every 6 hours with 10-minute warning
+# Restarts at: 04:00, 10:00, 16:00, 22:00
+#50 3,9,15,21 * * * /usr/local/bin/asa-scheduled-restart asa-server-1 10

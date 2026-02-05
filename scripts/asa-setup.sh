@@ -249,10 +249,18 @@ EOF
             
             # Check available space
             if available_gb=$(df -BG "$custom_data_root" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//'); then
-                print_info "Available space: ${available_gb} GB"
-                
-                if [ "$available_gb" -lt 50 ]; then
-                    print_warning "Warning: Less than 50 GB available. Recommended: 100+ GB"
+                # Handle edge cases: empty, non-numeric, or fractional values
+                if [[ "$available_gb" =~ ^[0-9]+$ ]]; then
+                    print_info "Available space: ${available_gb} GB"
+                    
+                    if [ "$available_gb" -lt 50 ]; then
+                        print_warning "Warning: Less than 50 GB available. Recommended: 100+ GB"
+                        if ! confirm "Continue anyway?"; then
+                            exit 1
+                        fi
+                    fi
+                else
+                    print_warning "Could not determine available disk space"
                     if ! confirm "Continue anyway?"; then
                         exit 1
                     fi
@@ -505,9 +513,13 @@ Examples:
     sudo ./asa-setup.sh --skip-docker
 
 Storage Locations After Setup:
+    (Where <data-root> is your configured Docker data directory)
     - Server files: <data-root>/volumes/asa-server_server-files-1/_data
     - Backups: <data-root>/volumes/backups
     - Steam/Proton: <data-root>/volumes/asa-server_steam-1/
+    
+    Example with default: /var/lib/docker/volumes/asa-server_server-files-1/_data
+    Example with custom: /mnt/4tb-ssd/docker/volumes/asa-server_server-files-1/_data
 
 EOF
                 exit 0

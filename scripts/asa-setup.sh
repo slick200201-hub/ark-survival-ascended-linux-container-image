@@ -196,6 +196,108 @@ start_docker() {
     fi
 }
 
+configure_docker_data_root() {
+    print_header "Docker Data Directory Configuration"
+    
+    local default_data_root="/var/lib/docker"
+    local custom_data_root=""
+    
+    # Helper function to create daemon.json
+    create_daemon_json() {
+        local data_root="$1"
+        mkdir -p /etc/docker
+        cat > /etc/docker/daemon.json <<EOF
+{
+  "data-root": "${data_root}"
+}
+EOF
+    }
+    
+    if [ "$AUTO_MODE" = false ]; then
+        echo ""
+        print_info "Docker stores all container data, volumes, and images in a data directory."
+        print_info "Default location: ${default_data_root}"
+        print_info "Optional: You can specify a custom location if you have a separate drive."
+        echo ""
+        print_info "Examples of custom paths:"
+        print_info "  /mnt/storage/docker    - Mounted storage drive"
+        print_info "  /home/docker           - Home partition"
+        print_info "  (or press Enter to use default: ${default_data_root})"
+        echo ""
+        
+        read -p "Docker data directory [${default_data_root}]: " custom_data_root
+        custom_data_root=${custom_data_root:-$default_data_root}
+        
+        # Validate and create directory
+        if [ "$custom_data_root" != "$default_data_root" ]; then
+            print_info "Using custom data directory: ${custom_data_root}"
+            
+            # Check if directory exists
+            if [ ! -d "$custom_data_root" ]; then
+                if confirm "Directory does not exist. Create it?"; then
+                    if ! mkdir -p "$custom_data_root" 2>/dev/null; then
+                        print_error "Failed to create directory: ${custom_data_root}"
+                        print_error "Please check permissions and try again"
+                        exit 1
+                    fi
+                    print_success "Directory created: ${custom_data_root}"
+                else
+                    print_error "Cannot proceed without a valid directory"
+                    exit 1
+                fi
+            fi
+            
+            # Check available space
+            if available_output=$(df -BG "$custom_data_root" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//'); then
+                # Convert to integer (handles fractional values like 49.8)
+                available_gb=$(echo "$available_output" | awk '{print int($1)}')
+                
+                # Validate the result is numeric
+                if [[ "$available_gb" =~ ^[0-9]+$ ]] && [ "$available_gb" -ge 0 ]; then
+                    print_info "Available space: ${available_gb} GB"
+                    
+                    if [ "$available_gb" -lt 50 ]; then
+                        print_warning "Warning: Less than 50 GB available. Recommended: 100+ GB"
+                        if ! confirm "Continue anyway?"; then
+                            exit 1
+                        fi
+                    fi
+                else
+                    print_warning "Could not determine available disk space"
+                    if ! confirm "Continue anyway?"; then
+                        exit 1
+                    fi
+                fi
+            else
+                print_warning "Could not determine available disk space"
+                if ! confirm "Continue anyway?"; then
+                    exit 1
+                fi
+            fi
+            
+            # Configure Docker daemon
+            print_info "Configuring Docker daemon..."
+            create_daemon_json "$custom_data_root"
+            
+            print_success "Docker configured to use: ${custom_data_root}"
+            print_info "All server files, volumes, and backups will be stored here."
+        else
+            print_info "Using default Docker data directory"
+        fi
+    else
+        # Auto mode - use environment variable if set
+        if [ -n "${DOCKER_DATA_ROOT:-}" ]; then
+            if ! mkdir -p "$DOCKER_DATA_ROOT" 2>/dev/null; then
+                print_error "Failed to create Docker data directory: ${DOCKER_DATA_ROOT}"
+                print_error "Please check the path and permissions"
+                exit 1
+            fi
+            create_daemon_json "$DOCKER_DATA_ROOT"
+            print_info "Docker configured to use: ${DOCKER_DATA_ROOT}"
+        fi
+    fi
+}
+
 create_server_directory() {
     print_header "Creating Server Directory"
     
@@ -392,12 +494,35 @@ Options:
     --skip-docker  Skip Docker installation
     --help         Show this help message
 
+Environment Variables:
+    DOCKER_DATA_ROOT    Set custom Docker data directory (for --auto mode)
+
 This script will:
     1. Install Docker and Docker Compose (if needed)
-    2. Create installation directory
-    3. Download docker-compose.yml configuration
-    4. Start the ARK server container
-    5. Install management scripts
+    2. Configure Docker data directory (optional - recommended for separate drives)
+    3. Create installation directory
+    4. Download docker-compose.yml configuration
+    5. Start the ARK server container
+    6. Install management scripts
+
+Examples:
+    # Interactive setup with prompts
+    sudo ./asa-setup.sh
+
+    # Automated setup with custom Docker location
+    sudo DOCKER_DATA_ROOT=/mnt/storage/docker ./asa-setup.sh --auto
+
+    # Skip Docker installation (already installed)
+    sudo ./asa-setup.sh --skip-docker
+
+Storage Locations After Setup:
+    (Where <data-root> is your configured Docker data directory)
+    - Server files: <data-root>/volumes/asa-server_server-files-1/_data
+    - Backups: <data-root>/volumes/backups
+    - Steam/Proton: <data-root>/volumes/asa-server_steam-1/
+    
+    Example with default: /var/lib/docker/volumes/asa-server_server-files-1/_data
+    Example with custom: /mnt/storage/docker/volumes/asa-server_server-files-1/_data
 
 EOF
                 exit 0
@@ -453,6 +578,10 @@ EOF
                     ;;
             esac
         fi
+        
+        # Configure Docker data directory BEFORE starting Docker
+        configure_docker_data_root
+        press_enter
         
         # Start Docker service
         start_docker

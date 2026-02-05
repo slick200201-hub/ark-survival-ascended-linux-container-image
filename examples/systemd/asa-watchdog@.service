@@ -1,0 +1,20 @@
+[Unit]
+Description=ARK: Survival Ascended Watchdog for %i
+After=docker.service
+Requires=docker.service
+Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/asa-watchdog %i 60
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Logging
+SyslogIdentifier=asa-watchdog-%i
+
+[Install]
+WantedBy=multi-user.target

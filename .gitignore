@@ -1,0 +1,39 @@
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
+logs/
+
+# Docker volumes and data (managed by Docker)
+volumes/
+
+# Test data
+test-data/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.tar.gz
+*.zip
+
+# Local configuration
+local.env
+.env.local

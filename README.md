@@ -5,6 +5,7 @@ This repository provides a step by step guide for Linux administrators to host A
 ## Table of Contents
 
 * [Hardware Requirements](#hardware-requirements)
+* [Management Scripts (NEW)](#management-scripts)
 * [Installation](#installation)
   * [Install Docker & Docker Compose](#1-install-docker--docker-compose)
   * [Start docker daemon](#2-start-docker-daemon)
@@ -51,6 +52,55 @@ I cannot tell you what CPU to use, as I didn't do any testing on this, but this 
 
 The server runs next to other services and it runs pretty well.
 
+## Management Scripts
+
+This repository now includes comprehensive Linux shell scripts that replace Windows .bat file functionality for server management. These scripts provide:
+
+* **Automated Setup** - Interactive installation wizard
+* **Server Management** - Start, stop, restart, update, and monitor servers
+* **Watchdog Service** - Automatic restart on crashes
+* **Scheduled Restarts** - Graceful restarts with player notifications
+* **Backup Management** - Create, restore, and manage backups
+
+### Quick Start with Scripts
+
+```bash
+# Download the management scripts
+git clone https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image.git
+cd ark-survival-ascended-linux-container-image
+
+# Run automated setup (installs Docker, downloads configs, starts server)
+sudo ./scripts/asa-setup.sh
+
+# Or use individual management commands
+./scripts/asa-server-manager.sh start
+./scripts/asa-server-manager.sh status
+./scripts/asa-backup.sh create asa-server-1
+```
+
+For detailed documentation on all available scripts and their features, see [scripts/README.md](scripts/README.md).
+
+### Script Features
+
+| Script | Purpose | Key Features |
+|--------|---------|--------------|
+| `asa-setup.sh` | Initial setup | Docker installation, server configuration, automated setup |
+| `asa-server-manager.sh` | Server control | Start/stop/restart, status, updates, logs, RCON |
+| `asa-watchdog.sh` | Monitoring | Auto-restart on crash, health checks, restart loop prevention |
+| `asa-scheduled-restart.sh` | Maintenance | Graceful restarts with countdown notifications |
+| `asa-backup.sh` | Backups | Create/restore/list/cleanup backups |
+
+### Windows .bat to Linux Script Equivalents
+
+| Windows .bat Command | Linux Script Equivalent |
+|---------------------|------------------------|
+| `taskkill /F /IM ArkServer.exe` | `docker stop asa-server-1` |
+| `timeout /T 60` | `sleep 60` |
+| Server restart loop | `./scripts/asa-watchdog.sh` |
+| Scheduled restarts | `./scripts/asa-scheduled-restart.sh` |
+| Backup creation | `./scripts/asa-backup.sh create` |
+| RCON commands | `docker exec asa-server-1 asa-ctrl rcon --exec 'command'` |
+
 ## Installation
 
 Required Linux experience: **Beginner**
@@ -91,12 +141,12 @@ systemctl enable docker
 
 ### 3. Create the Docker Compose config
 
-Create a directory called `asa-server` wherever you like and download [my docker-compose.yml](https://github.com/mschnitzer/ark-survival-ascended-linux-container-image/blob/main/docker-compose.yml) example.
+Create a directory called `asa-server` wherever you like and download [the docker-compose.yml](https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image/blob/main/docker-compose.yml) example.
 
 ```
 mkdir asa-server
 cd asa-server
-wget https://raw.githubusercontent.com/mschnitzer/ark-survival-ascended-linux-container-image/main/docker-compose.yml
+wget https://raw.githubusercontent.com/slick200201-hub/ark-survival-ascended-linux-container-image/main/docker-compose.yml
 ```
 
 ### 4. First server start
@@ -136,7 +186,7 @@ SessionName=ARK #334850
 ```
 
 Now try to find the server by its name. Just search in the "Unofficial" section in ASA for the number of the server. In my case it is `334850`. If you are not able to connect to it right away, wait up to 5 more minutes and
-try it again. If it's still not possible, [open an issue on GitHub](https://github.com/mschnitzer/ark-survival-ascended-linux-container-image/issues/new) to get help.
+try it again. If it's still not possible, [open an issue on GitHub](https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image/issues/new) to get help.
 
 Once confirmed that you are able to connect, stop the server again:
 
@@ -479,7 +529,7 @@ If you cannot discover your server in the server browser, it's most likely due t
 * Your server is still booting up, give it ~5 minutes
 * You are not looking at the "Unofficial" server browser list
 * Your filter settings in the server browser exclude your server
-* You forgot clicking the "Show player server settings". ([view screenshot](https://raw.githubusercontent.com/mschnitzer/ark-survival-ascended-linux-container-image/main/assets/show-player-servers.jpg)) By default, only Nitrado servers are shown to players when searching for unofficial servers, unfortunately.
+* You forgot clicking the "Show player server settings". ([view screenshot](https://raw.githubusercontent.com/slick200201-hub/ark-survival-ascended-linux-container-image/main/assets/show-player-servers.jpg)) By default, only Nitrado servers are shown to players when searching for unofficial servers, unfortunately.
 
 ## Addressing "Connection Timeout" issues
 

@@ -17,10 +17,36 @@ sudo ./scripts/asa-setup.sh
 
 This will:
 - Install Docker (if needed)
+- Configure Docker data directory (optional)
 - Create server directory
 - Download configuration
 - Start your server
 - Install management scripts
+
+#### Choosing Docker Data Directory (Optional)
+
+By default, Docker stores all data in `/var/lib/docker`. If you have multiple drives, you can configure Docker to use a different location during setup.
+
+**Benefits:**
+- Keep OS and system files on a smaller, faster SSD
+- Store large game/server files on a larger storage drive
+- Better disk space management
+
+**During interactive setup:**
+You'll be prompted to enter a custom path, for example:
+- `/mnt/4tb-ssd/docker` - if you have a 4TB drive mounted at /mnt/4tb-ssd
+- `/home/docker` - to use your home partition
+- Press Enter to use default `/var/lib/docker`
+
+**For automated setup:**
+```bash
+sudo DOCKER_DATA_ROOT=/mnt/4tb-ssd/docker ./scripts/asa-setup.sh --auto
+```
+
+**Storage requirements:**
+- Minimum: 50 GB free space
+- Recommended: 100+ GB free space
+- Actual usage: ~11 GB (server files) + ~13 GB (runtime) + backups
 
 ### 3. Or Install Scripts Manually (For Existing Servers)
 ```bash

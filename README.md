@@ -139,6 +139,57 @@ systemctl start docker
 systemctl enable docker
 ```
 
+### 2.1. Choosing Docker Data Directory (Optional)
+
+By default, Docker stores all data in `/var/lib/docker`. If you have multiple drives, you can configure Docker to use a different location during setup.
+
+**Benefits:**
+- Keep OS and system files on a smaller, faster SSD
+- Store large game/server files on a larger storage drive
+- Better disk space management
+
+**To configure a custom data directory:**
+
+1. Stop Docker if it's running:
+   ```bash
+   systemctl stop docker
+   ```
+
+2. Create the directory for Docker data:
+   ```bash
+   mkdir -p /mnt/4tb-ssd/docker
+   ```
+
+3. Create or edit `/etc/docker/daemon.json`:
+   ```bash
+   mkdir -p /etc/docker
+   cat > /etc/docker/daemon.json <<EOF
+   {
+     "data-root": "/mnt/4tb-ssd/docker"
+   }
+   EOF
+   ```
+
+4. Start Docker:
+   ```bash
+   systemctl start docker
+   ```
+
+**Examples:**
+- `/mnt/4tb-ssd/docker` - if you have a 4TB drive mounted at /mnt/4tb-ssd
+- `/home/docker` - to use your home partition
+- Press Enter to use default `/var/lib/docker`
+
+**Storage requirements:**
+- Minimum: 50 GB free space
+- Recommended: 100+ GB free space
+- Actual usage: ~11 GB (server files) + ~13 GB (runtime) + backups
+
+**Note:** If using the automated setup script (`./scripts/asa-setup.sh`), you'll be prompted to configure this interactively. For automated setups, use:
+```bash
+sudo DOCKER_DATA_ROOT=/mnt/4tb-ssd/docker ./scripts/asa-setup.sh --auto
+```
+
 ### 3. Create the Docker Compose config
 
 Create a directory called `asa-server` wherever you like and download [the docker-compose.yml](https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image/blob/main/docker-compose.yml) example.

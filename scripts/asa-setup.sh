@@ -217,12 +217,12 @@ EOF
         echo ""
         print_info "Docker stores all container data, volumes, and images in a data directory."
         print_info "Default location: ${default_data_root}"
-        print_info "Recommended: Use a separate drive with more storage capacity."
+        print_info "Optional: You can specify a custom location if you have a separate drive."
         echo ""
-        print_info "Examples:"
-        print_info "  /mnt/4tb-ssd/docker    - Custom mounted drive"
+        print_info "Examples of custom paths:"
+        print_info "  /mnt/storage/docker    - Mounted storage drive"
         print_info "  /home/docker           - Home partition"
-        print_info "  ${default_data_root}   - System default (press Enter)"
+        print_info "  (or press Enter to use default: ${default_data_root})"
         echo ""
         
         read -p "Docker data directory [${default_data_root}]: " custom_data_root
@@ -510,7 +510,7 @@ Examples:
     sudo ./asa-setup.sh
 
     # Automated setup with custom Docker location
-    sudo DOCKER_DATA_ROOT=/mnt/4tb-ssd/docker ./asa-setup.sh --auto
+    sudo DOCKER_DATA_ROOT=/mnt/storage/docker ./asa-setup.sh --auto
 
     # Skip Docker installation (already installed)
     sudo ./asa-setup.sh --skip-docker
@@ -522,7 +522,7 @@ Storage Locations After Setup:
     - Steam/Proton: <data-root>/volumes/asa-server_steam-1/
     
     Example with default: /var/lib/docker/volumes/asa-server_server-files-1/_data
-    Example with custom: /mnt/4tb-ssd/docker/volumes/asa-server_server-files-1/_data
+    Example with custom: /mnt/storage/docker/volumes/asa-server_server-files-1/_data
 
 EOF
                 exit 0

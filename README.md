@@ -157,7 +157,7 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
 
 2. Create the directory for Docker data:
    ```bash
-   mkdir -p /mnt/4tb-ssd/docker
+   mkdir -p /mnt/storage/docker
    ```
 
 3. Create or edit `/etc/docker/daemon.json`:
@@ -168,13 +168,13 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
    # you should merge the "data-root" setting with your existing configuration
    # rather than overwriting the file. For example:
    # {
-   #   "data-root": "/mnt/4tb-ssd/docker",
+   #   "data-root": "/mnt/storage/docker",
    #   "your-other-setting": "value"
    # }
    
    cat > /etc/docker/daemon.json <<EOF
    {
-     "data-root": "/mnt/4tb-ssd/docker"
+     "data-root": "/mnt/storage/docker"
    }
    EOF
    ```
@@ -185,7 +185,7 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
    ```
 
 **Examples:**
-- `/mnt/4tb-ssd/docker` - if you have a 4TB drive mounted at /mnt/4tb-ssd
+- `/mnt/storage/docker` - if you have a separate drive mounted at /mnt/storage
 - `/home/docker` - to use your home partition
 - Press Enter to use default `/var/lib/docker`
 
@@ -196,7 +196,7 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
 
 **Note:** If using the automated setup script (`./scripts/asa-setup.sh`), you'll be prompted to configure this interactively. For automated setups, use:
 ```bash
-sudo DOCKER_DATA_ROOT=/mnt/4tb-ssd/docker ./scripts/asa-setup.sh --auto
+sudo DOCKER_DATA_ROOT=/mnt/storage/docker ./scripts/asa-setup.sh --auto
 ```
 
 ### 3. Create the Docker Compose config

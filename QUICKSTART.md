@@ -34,13 +34,13 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
 
 **During interactive setup:**
 You'll be prompted to enter a custom path, for example:
-- `/mnt/4tb-ssd/docker` - if you have a 4TB drive mounted at /mnt/4tb-ssd
+- `/mnt/storage/docker` - if you have a separate drive mounted at /mnt/storage
 - `/home/docker` - to use your home partition
 - Press Enter to use default `/var/lib/docker`
 
 **For automated setup:**
 ```bash
-sudo DOCKER_DATA_ROOT=/mnt/4tb-ssd/docker ./scripts/asa-setup.sh --auto
+sudo DOCKER_DATA_ROOT=/mnt/storage/docker ./scripts/asa-setup.sh --auto
 ```
 
 **Storage requirements:**

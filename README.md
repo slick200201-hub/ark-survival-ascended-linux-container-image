@@ -163,6 +163,15 @@ By default, Docker stores all data in `/var/lib/docker`. If you have multiple dr
 3. Create or edit `/etc/docker/daemon.json`:
    ```bash
    mkdir -p /etc/docker
+   
+   # Note: If /etc/docker/daemon.json already exists with other configuration,
+   # you should merge the "data-root" setting with your existing configuration
+   # rather than overwriting the file. For example:
+   # {
+   #   "data-root": "/mnt/4tb-ssd/docker",
+   #   "your-other-setting": "value"
+   # }
+   
    cat > /etc/docker/daemon.json <<EOF
    {
      "data-root": "/mnt/4tb-ssd/docker"

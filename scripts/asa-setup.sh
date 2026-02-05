@@ -248,9 +248,12 @@ EOF
             fi
             
             # Check available space
-            if available_gb=$(df -BG "$custom_data_root" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//'); then
-                # Handle edge cases: empty, non-numeric, or fractional values
-                if [[ "$available_gb" =~ ^[0-9]+$ ]]; then
+            if available_output=$(df -BG "$custom_data_root" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//'); then
+                # Convert to integer (handles fractional values like 49.8)
+                available_gb=$(echo "$available_output" | awk '{print int($1)}')
+                
+                # Validate the result is numeric
+                if [[ "$available_gb" =~ ^[0-9]+$ ]] && [ "$available_gb" -ge 0 ]; then
                     print_info "Available space: ${available_gb} GB"
                     
                     if [ "$available_gb" -lt 50 ]; then

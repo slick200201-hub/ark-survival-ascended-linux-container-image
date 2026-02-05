@@ -202,6 +202,17 @@ configure_docker_data_root() {
     local default_data_root="/var/lib/docker"
     local custom_data_root=""
     
+    # Helper function to create daemon.json
+    create_daemon_json() {
+        local data_root="$1"
+        mkdir -p /etc/docker
+        cat > /etc/docker/daemon.json <<EOF
+{
+  "data-root": "${data_root}"
+}
+EOF
+    }
+    
     if [ "$AUTO_MODE" = false ]; then
         echo ""
         print_info "Docker stores all container data, volumes, and images in a data directory."
@@ -224,7 +235,11 @@ configure_docker_data_root() {
             # Check if directory exists
             if [ ! -d "$custom_data_root" ]; then
                 if confirm "Directory does not exist. Create it?"; then
-                    mkdir -p "$custom_data_root"
+                    if ! mkdir -p "$custom_data_root" 2>/dev/null; then
+                        print_error "Failed to create directory: ${custom_data_root}"
+                        print_error "Please check permissions and try again"
+                        exit 1
+                    fi
                     print_success "Directory created: ${custom_data_root}"
                 else
                     print_error "Cannot proceed without a valid directory"
@@ -233,11 +248,17 @@ configure_docker_data_root() {
             fi
             
             # Check available space
-            local available_gb=$(df -BG "$custom_data_root" | awk 'NR==2 {print $4}' | sed 's/G//')
-            print_info "Available space: ${available_gb} GB"
-            
-            if [ "$available_gb" -lt 50 ]; then
-                print_warning "Warning: Less than 50 GB available. Recommended: 100+ GB"
+            if available_gb=$(df -BG "$custom_data_root" 2>/dev/null | awk 'NR==2 {print $4}' | sed 's/G//'); then
+                print_info "Available space: ${available_gb} GB"
+                
+                if [ "$available_gb" -lt 50 ]; then
+                    print_warning "Warning: Less than 50 GB available. Recommended: 100+ GB"
+                    if ! confirm "Continue anyway?"; then
+                        exit 1
+                    fi
+                fi
+            else
+                print_warning "Could not determine available disk space"
                 if ! confirm "Continue anyway?"; then
                     exit 1
                 fi
@@ -245,13 +266,7 @@ configure_docker_data_root() {
             
             # Configure Docker daemon
             print_info "Configuring Docker daemon..."
-            mkdir -p /etc/docker
-            
-            cat > /etc/docker/daemon.json <<EOF
-{
-  "data-root": "${custom_data_root}"
-}
-EOF
+            create_daemon_json "$custom_data_root"
             
             print_success "Docker configured to use: ${custom_data_root}"
             print_info "All server files, volumes, and backups will be stored here."
@@ -261,13 +276,12 @@ EOF
     else
         # Auto mode - use environment variable if set
         if [ -n "${DOCKER_DATA_ROOT:-}" ]; then
-            mkdir -p "$DOCKER_DATA_ROOT"
-            mkdir -p /etc/docker
-            cat > /etc/docker/daemon.json <<EOF
-{
-  "data-root": "${DOCKER_DATA_ROOT}"
-}
-EOF
+            if ! mkdir -p "$DOCKER_DATA_ROOT" 2>/dev/null; then
+                print_error "Failed to create Docker data directory: ${DOCKER_DATA_ROOT}"
+                print_error "Please check the path and permissions"
+                exit 1
+            fi
+            create_daemon_json "$DOCKER_DATA_ROOT"
             print_info "Docker configured to use: ${DOCKER_DATA_ROOT}"
         fi
     fi

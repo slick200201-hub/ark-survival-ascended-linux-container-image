@@ -169,11 +169,11 @@ crontab -e
 ### Linux systemd Timers (Alternative)
 
 ```bash
-# Install timers
-sudo cp examples/systemd/asa-backup.timer /etc/systemd/system/asa-backup@asa-server-1.timer
-sudo cp examples/systemd/asa-backup.service /etc/systemd/system/asa-backup@.service
+# Install timer template files
+sudo cp examples/systemd/asa-backup@.timer /etc/systemd/system/
+sudo cp examples/systemd/asa-backup@.service /etc/systemd/system/
 
-# Enable and start
+# Enable and start for your server
 sudo systemctl daemon-reload
 sudo systemctl enable asa-backup@asa-server-1.timer
 sudo systemctl start asa-backup@asa-server-1.timer

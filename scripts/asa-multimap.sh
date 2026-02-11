@@ -287,6 +287,17 @@ cmd_generate() {
     print_info "Output file: $output_file"
     echo ""
     
+    # Check if output file exists and warn
+    if [ -f "$output_file" ]; then
+        print_warning "Output file already exists: $output_file"
+        read -p "Overwrite? (yes/no): " -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+            print_info "Generation cancelled"
+            exit 0
+        fi
+    fi
+    
     # Start generating the compose file
     cat > "$output_file" << 'EOF'
 version: "3.3"

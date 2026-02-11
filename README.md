@@ -89,6 +89,7 @@ For detailed documentation on all available scripts and their features, see [scr
 | `asa-watchdog.sh` | Monitoring | Auto-restart on crash, health checks, restart loop prevention |
 | `asa-scheduled-restart.sh` | Maintenance | Graceful restarts with countdown notifications |
 | `asa-backup.sh` | Backups | Create/restore/list/cleanup backups |
+| `asa-multimap.sh` | Multi-server | Generate configs for multiple map servers |
 
 ### Windows .bat to Linux Script Equivalents
 
@@ -99,7 +100,10 @@ For detailed documentation on all available scripts and their features, see [scr
 | Server restart loop | `./scripts/asa-watchdog.sh` |
 | Scheduled restarts | `./scripts/asa-scheduled-restart.sh` |
 | Backup creation | `./scripts/asa-backup.sh create` |
+| Multi-map setup | `./scripts/asa-multimap.sh generate` |
 | RCON commands | `docker exec asa-server-1 asa-ctrl rcon --exec 'command'` |
+
+**📖 For Windows server admins:** See the complete [Windows to Linux Migration Guide](docs/BATCH_MIGRATION.md) for detailed conversion instructions, feature comparisons, and migration checklists.
 
 ## Installation
 

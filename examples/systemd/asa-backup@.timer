@@ -1,0 +1,14 @@
+[Unit]
+Description=ARK: Survival Ascended Daily Backup Timer for %i
+Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image
+
+[Timer]
+# Run daily at 2:00 AM
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+# Randomize start time by up to 5 minutes to avoid all servers backing up at once
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,18 @@
+[Unit]
+Description=ARK: Survival Ascended Backup Service for %i
+After=docker.service
+Requires=docker.service
+Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/asa-backup create %i scheduled
+StandardOutput=journal
+StandardError=journal
+
+# Logging
+SyslogIdentifier=asa-backup-%i
+
+[Install]
+WantedBy=multi-user.target

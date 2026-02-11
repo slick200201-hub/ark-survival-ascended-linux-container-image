@@ -198,6 +198,31 @@ asa-backup create asa-server-1
 asa-backup create asa-server-2
 ```
 
+## Running Multiple Map Servers
+
+Want to run multiple maps (cluster)?
+
+```bash
+# Generate multi-map configuration
+./scripts/asa-multimap.sh generate --maps "TheIsland_WP,ScorchedEarth_WP,TheCenter_WP"
+
+# Start all servers
+docker compose -f docker-compose.multi.yml up -d
+
+# Set up watchdog for each
+sudo systemctl enable asa-watchdog@asa-server-TheIsland.service
+sudo systemctl enable asa-watchdog@asa-server-ScorchedEarth.service
+sudo systemctl enable asa-watchdog@asa-server-TheCenter.service
+
+sudo systemctl start asa-watchdog@asa-server-TheIsland.service
+sudo systemctl start asa-watchdog@asa-server-ScorchedEarth.service
+sudo systemctl start asa-watchdog@asa-server-TheCenter.service
+```
+
+Each server gets unique ports (7777, 7778, 7779, etc.) and shares cluster data for player transfers.
+
+See [Multi-Map Documentation](scripts/asa-multimap.sh) for full details.
+
 ## What Replaced Windows .bat Files
 
 | What You Used to Do | Now Do This |
@@ -209,5 +234,8 @@ asa-backup create asa-server-2
 | Run `update.bat` | `asa-server-manager update` |
 | Task Scheduler restarts | `crontab -e` + add schedule |
 | Watchdog .bat | `systemctl start asa-watchdog@...` |
+| Multi-map .bat files | `./scripts/asa-multimap.sh generate` |
+
+**For complete Windows to Linux migration guide, see [docs/BATCH_MIGRATION.md](docs/BATCH_MIGRATION.md)**
 
 That's it! You're now managing your ARK ASA server with Linux shell scripts.

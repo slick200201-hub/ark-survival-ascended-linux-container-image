@@ -72,6 +72,7 @@ volumes:
   steam-1:
   steamcmd-1:
   server-files-1:
+  backups:
 #  steam-2:
 #  steamcmd-2:
 #  server-files-2:

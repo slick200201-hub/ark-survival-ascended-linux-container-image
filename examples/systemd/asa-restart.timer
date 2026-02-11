@@ -1,0 +1,17 @@
+[Unit]
+Description=ARK: Survival Ascended Daily Restart Timer for %i
+Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-container-image
+
+[Timer]
+# Run daily at 4:00 AM
+# Note: The restart script includes a 30-minute warning period by default,
+# so the actual restart will happen at 4:30 AM
+OnCalendar=daily
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+
+# Randomize start time by up to 5 minutes for multiple servers
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

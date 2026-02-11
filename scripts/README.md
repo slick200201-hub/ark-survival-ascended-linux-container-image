@@ -168,6 +168,63 @@ Comprehensive backup creation, restoration, and management.
 
 ---
 
+### 6. `asa-multimap.sh` - Multi-Map Server Management
+Generate docker-compose configurations for running multiple map servers.
+
+**Features:**
+- Automatic port allocation for multiple servers
+- Shared cluster storage for player transfers
+- Individual volumes for each map server
+- Support for all official maps
+- Custom port ranges
+
+**Usage:**
+```bash
+# List available maps
+./asa-multimap.sh list
+
+# Generate configuration for 3 maps
+./asa-multimap.sh generate --maps "TheIsland_WP,ScorchedEarth_WP,TheCenter_WP"
+
+# Custom ports and settings
+./asa-multimap.sh generate --maps "TheIsland_WP,Aberration_WP" \
+    --base-port 7780 \
+    --base-rcon 27030 \
+    --max-players 70 \
+    --cluster-id mycluster
+
+# Show example setup
+./asa-multimap.sh example
+```
+
+**After Generating:**
+```bash
+# Start all servers
+docker compose -f docker-compose.multi.yml up -d
+
+# Or start individual servers
+docker compose -f docker-compose.multi.yml up -d asa-server-TheIsland
+
+# Enable watchdog for each server
+sudo systemctl enable asa-watchdog@asa-server-TheIsland.service
+sudo systemctl enable asa-watchdog@asa-server-ScorchedEarth.service
+```
+
+**Port Allocation:**
+Each server automatically gets unique ports:
+- Server 1: Game 7777, RCON 27020
+- Server 2: Game 7778, RCON 27021
+- Server 3: Game 7779, RCON 27022
+
+**Available Official Maps:**
+- TheIsland_WP, ScorchedEarth_WP, Aberration_WP
+- Extinction_WP, Genesis_WP, Genesis2_WP
+- TheCenter_WP, Ragnarok_WP, Valguero_WP
+- CrystalIsles_WP, LostIsland_WP, Fjordur_WP
+
+---
+
+
 ## Installation
 
 ### System-wide Installation

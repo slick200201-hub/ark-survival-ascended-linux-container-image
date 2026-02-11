@@ -126,10 +126,10 @@ Automate backups using systemd timers instead of cron.
 
 ### Installation
 
-1. Copy the timer and service files:
+1. Copy the timer and service template files:
 ```bash
-sudo cp asa-backup.timer /etc/systemd/system/asa-backup@asa-server-1.timer
-sudo cp asa-backup.service /etc/systemd/system/asa-backup@.service
+sudo cp asa-backup@.timer /etc/systemd/system/
+sudo cp asa-backup@.service /etc/systemd/system/
 ```
 
 2. Reload systemd:
@@ -137,7 +137,7 @@ sudo cp asa-backup.service /etc/systemd/system/asa-backup@.service
 sudo systemctl daemon-reload
 ```
 
-3. Enable and start the timer:
+3. Enable and start the timer for your server:
 ```bash
 sudo systemctl enable asa-backup@asa-server-1.timer
 sudo systemctl start asa-backup@asa-server-1.timer
@@ -182,10 +182,10 @@ Automate server restarts with player warnings using systemd timers.
 
 ### Installation
 
-1. Copy the timer and service files:
+1. Copy the timer and service template files:
 ```bash
-sudo cp asa-restart.timer /etc/systemd/system/asa-restart@asa-server-1.timer
-sudo cp asa-restart.service /etc/systemd/system/asa-restart@.service
+sudo cp asa-restart@.timer /etc/systemd/system/
+sudo cp asa-restart@.service /etc/systemd/system/
 ```
 
 2. Reload systemd:
@@ -193,7 +193,7 @@ sudo cp asa-restart.service /etc/systemd/system/asa-restart@.service
 sudo systemctl daemon-reload
 ```
 
-3. Enable and start the timer:
+3. Enable and start the timer for your server:
 ```bash
 sudo systemctl enable asa-restart@asa-server-1.timer
 sudo systemctl start asa-restart@asa-server-1.timer
@@ -270,15 +270,15 @@ This changes the warning time to 60 minutes.
 Set up watchdog, backups, and restarts for 3 servers:
 
 ```bash
-# Install service files
+# Install service template files (without instance names)
 sudo cp asa-watchdog@.service /etc/systemd/system/
-sudo cp asa-backup.timer /etc/systemd/system/
-sudo cp asa-backup.service /etc/systemd/system/
-sudo cp asa-restart.timer /etc/systemd/system/
-sudo cp asa-restart.service /etc/systemd/system/
+sudo cp asa-backup@.timer /etc/systemd/system/
+sudo cp asa-backup@.service /etc/systemd/system/
+sudo cp asa-restart@.timer /etc/systemd/system/
+sudo cp asa-restart@.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
-# Configure server 1
+# Configure server 1 (enable with instance names)
 sudo systemctl enable asa-watchdog@asa-server-1.service
 sudo systemctl enable asa-backup@asa-server-1.timer
 sudo systemctl enable asa-restart@asa-server-1.timer

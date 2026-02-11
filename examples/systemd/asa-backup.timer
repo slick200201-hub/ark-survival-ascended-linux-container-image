@@ -4,7 +4,6 @@ Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-con
 
 [Timer]
 # Run daily at 2:00 AM
-OnCalendar=daily
 OnCalendar=*-*-* 02:00:00
 Persistent=true
 

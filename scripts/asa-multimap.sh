@@ -112,6 +112,14 @@ Port Allocation:
     - Server 3: Game 7779, RCON 27022
     etc.
 
+Container Naming:
+    Container names are derived from map names by removing the '_WP' suffix:
+    - TheIsland_WP      → asa-server-TheIsland
+    - ScorchedEarth_WP  → asa-server-ScorchedEarth
+    - CustomMap         → asa-server-CustomMap
+    
+    For mod maps without '_WP', the full name is used.
+
 EOF
     exit 0
 }

@@ -6,7 +6,6 @@ Documentation=https://github.com/slick200201-hub/ark-survival-ascended-linux-con
 # Run daily at 4:00 AM
 # Note: The restart script includes a 30-minute warning period by default,
 # so the actual restart will happen at 4:30 AM
-OnCalendar=daily
 OnCalendar=*-*-* 04:00:00
 Persistent=true
 
